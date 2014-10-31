@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="Shift_JIS" ?>  
+  
+<!DOCTYPE sqlMap        
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"        
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="FusokuEntity" type="ysbk_web.model.fusoku.FusokuEntity" />
+	<!-- 納入進捗一覧取得 -->
+	<select id="findFusoku" parameterClass="java.util.HashMap"
+		resultClass="FusokuEntity">
+		SELECT JO.NOU_YMD,JO.RG,JO.BIN_NO,JO.TK_UKE,JO.TK_HIN,
+		JO.SYUYO_SU,SUM(JO.SIJI_SU - JO.HIKI_SU) AS FUSOKU_SU,
+		SUM(JO.SIJI_SU)
+		AS SIJI_SU,JO.TK_SEBAN,
+		NVL(M01.KANRI_KOJO,' ') AS
+		KANRI_KOJO,NVL(M01.S_KYOTEN,' ') AS S_KYOTEN,
+		NVL(M01.SEIZO_BA,' ') AS
+		SEIZO_BA,NVL(M01.LOCATION,' ') AS LOCATION,
+		JO.HIKI_FG
+
+		FROM TB_NOUHIN_JO
+		JO,TB_HINBAN_MA M01
+
+		WHERE 0 = 0
+		<![CDATA[ $selSqlWhere$ ]]>
+		AND JO.TK_KOJO = M01.TK_KOJO(+)
+		AND JO.TK_UKE = M01.TK_UKE(+)
+		AND
+		JO.TK_HIN = M01.TK_HIN(+)
+		AND JO.SYUYO_SU = M01.SYUYO_SU(+)
+		AND
+		JO.HIKI_SU <![CDATA[ < ]]>
+		JO.SIJI_SU
+		GROUP BY
+		JO.NOU_YMD,JO.RG,JO.BIN_NO,JO.TK_UKE,JO.TK_HIN,
+		JO.SYUYO_SU,JO.TK_SEBAN,NVL(M01.KANRI_KOJO,' '),NVL(M01.S_KYOTEN,' '),
+		NVL(M01.SEIZO_BA,' '),NVL(M01.LOCATION,' '), JO.HIKI_FG
+		ORDER BY
+		JO.NOU_YMD,JO.RG,JO.BIN_NO,JO.TK_UKE,JO.TK_HIN,JO.SYUYO_SU
+	</select>
+</sqlMap>

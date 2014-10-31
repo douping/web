@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="Shift_JIS" ?>  
+  
+<!DOCTYPE sqlMap        
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"        
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="HannyuProgDetailEntity"
+		type="ysbk_web.model.hannyuProg.HannyuProgDetailEntity" />
+	<!-- 搬入進捗管理 詳細取得 -->
+	<select id="findHannyuProgDetail" parameterClass="ysbk_web.condition.HannyuProgDetailCondition"
+		resultClass="HannyuProgDetailEntity">
+		SELECT
+		DATA.TK_HIN,DATA.SYUYO_SU,DATA.SEBAN,DATA.SIJI_SU,DATA.SIJI_HAKO,
+		DATA.HAN_SU,DATA.HAN_HAKO,DATA.SIJI_HAKO - DATA.HAN_HAKO AS SA,
+		MA.S_KYOTEN, MA.SEIZO_BA
+		FROM
+		<isEqual property="hanjou_fg" compareValue="搬入確定">
+			TB_HANNYU_RI DATA,
+			(SELECT TK_HIN,SYUYO_SU,MAX(S_KYOTEN) S_KYOTEN, MAX(SEIZO_BA)
+			SEIZO_BA
+			FROM TB_HINBAN_MA
+			GROUP BY TK_HIN,SYUYO_SU) MA
+		</isEqual>
+		<isNotEqual property="hanjou_fg" compareValue="搬入確定">
+			TB_HANHIN_JO
+			DATA , (SELECT TK_HIN,SYUYO_SU,MAX(S_KYOTEN) S_KYOTEN, MAX(SEIZO_BA)
+			SEIZO_BA
+			FROM TB_HINBAN_MA
+			GROUP BY TK_HIN,SYUYO_SU) MA
+		</isNotEqual>
+		WHERE DATA.BIN_ID = #bin_id# AND DATA.HAN_YMD = #han_ymd#
+		AND
+		DATA.TOKUSYA_KB = #tokusya_kb# AND DATA.TOKUSYA_KAI = #tokusya_kai#
+		AND DATA.TK_HIN = MA.TK_HIN(+) AND DATA.SYUYO_SU = MA.SYUYO_SU(+)
+		ORDER BY DATA.TK_HIN,DATA.SYUYO_SU
+	</select>
+</sqlMap>

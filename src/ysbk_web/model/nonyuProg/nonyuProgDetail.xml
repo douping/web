@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="Shift_JIS" ?>  
+  
+<!DOCTYPE sqlMap        
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"        
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="NonyuProgDetailEntity"
+		type="ysbk_web.model.nonyuProg.NonyuProgDetailEntity" />
+	<!-- 納入進捗 詳細取得 -->
+	<select id="findNonyuProgDetailByCondtion" parameterClass="ysbk_web.condition.NonyuProgDetailCondition"
+		resultClass="NonyuProgDetailEntity">
+		SELECT TUIKA_FG, TK_KOJO, TK_UKE, TK_SEBAN, TK_HIN, EDABAN, SEBAN,
+		SYUYO_SU, TP_NOBAN, SIJI_SU,(SIJI_SU - HIKI_SU) FUSOKU_SU,
+		UCHI_ZAN_SU, ORG_NOU_YMD, ORG_BIN_NO, ORG_SIJI_SU, ORG_EDABAN,
+		HIKI_SU, HIKI_FG, UCHI_FG
+		<isEqual property="noujou_fg" compareValue="0">
+			, JUNBI_SU
+			FROM
+			TB_NOUHIN_JO
+		</isEqual>
+		<isNotEqual property="noujou_fg" compareValue="0">
+			, SYUKA_SU AS
+			JUNBI_SU
+			FROM TB_NOUNYU_RI
+		</isNotEqual>
+		WHERE SIIRE = #siire#
+		AND NOU_YMD = #nou_ymd#
+		AND RTRIM(RG) =
+		RTRIM(#rg#)
+		AND BIN_NO = #bin_no#
+		AND B_KYOTEN = #b_kyoten#
+		ORDER BY
+		TK_KOJO, TK_UKE, TK_SEBAN, EDABAN
+	</select>
+</sqlMap>

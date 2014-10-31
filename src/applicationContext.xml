@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xsi:schemaLocation="
+            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+            http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.5.xsd">
+
+	<!-- ベースパッケージ -->
+	<context:component-scan base-package="ysbk_web" />
+
+	<!-- CGLIBProxy利用 -->
+	<aop:aspectj-autoproxy proxy-target-class="true" />
+
+	<!-- propertyを取得 -->
+	<bean id="propertyConfigurer"
+		class="ysbk_web.utility.CustomizedPropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:ysbk_web.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- データベース配置 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<!-- connect数の初期値 -->
+		<property name="initialSize" value="${initialSize}" />
+		<!-- connect数の最大值 -->
+		<property name="maxActive" value="${maxActive}" />
+		<!-- connect数の最大保持値 -->
+		<property name="maxIdle" value="${maxIdle}" />
+		<!-- connect数の最小保持値 -->
+		<property name="minIdle" value="${minIdle}" />
+	</bean>
+	<!-- ibatis設定 -->
+	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation" value="classpath:SqlMapConfig.xml" />
+		<!-- datasource取得 -->
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="sqlMapClientTemplate" class="org.springframework.orm.ibatis.SqlMapClientTemplate">
+		<property name="sqlMapClient" ref="sqlMapClient" />
+	</bean>
+	<bean id="utility" class="ysbk_web.utility.Utility">
+		<property name="sqlMapClientTemplate" ref="sqlMapClientTemplate" />
+	</bean>
+	<!-- トランザクション-->
+	<!-- a PlatformTransactionManager is still required -->
+	<bean id="txManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<!-- (this dependency is defined somewhere else) -->
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<!-- 开启事务注解配置 -->
+	<tx:annotation-driven transaction-manager="txManager" />
+
+	<!--<tx:annotation-driven proxy-target-class="true" transaction-manager="txManager"/> -->
+
+	<!-- 在库照会 -->
+	<bean id="hinbanZaikoDaoImpl" class="ysbk_web.dao.impl.HinbanZaikoDaoImpl"></bean>
+	<bean id="hinbanZaikoServiceImpl" class="ysbk_web.service.impl.HinbanZaikoServiceImpl">
+		<property name="dao" ref="hinbanZaikoDaoImpl"></property>
+	</bean>
+	<bean id="hinbanZaikoInitAction" class="ysbk_web.action.hinbanZaiko.HinbanZaikoInitAction" scope="request">
+		<property name="hinbanZaikoService" ref="hinbanZaikoServiceImpl"></property>
+	</bean>
+	<bean id="hinbanZaikoSearchAction" class="ysbk_web.action.hinbanZaiko.HinbanZaikoSearchAction" scope="request">
+		<property name="hinbanZaikoService" ref="hinbanZaikoServiceImpl"></property>
+	</bean>
+	<bean id="hinbanZaikoDetailAction" class="ysbk_web.action.hinbanZaiko.HinbanZaikoDetailAction" scope="request">
+		<property name="hinbanZaikoService" ref="hinbanZaikoServiceImpl"></property>
+	</bean>
+
+
+	<bean id="userDaoImpl" class="ysbk_web.dao.impl.UserDaoImpl"></bean>
+	<bean id="userServiceImpl" class="ysbk_web.service.impl.UserServiceImpl">
+		<property name="userDao" ref="userDaoImpl"></property>
+	</bean>
+
+	<!-- password -->
+	<bean id="passWordDaoImpl" class="ysbk_web.dao.impl.PassWordDaoImpl"></bean>
+	<bean id="passWordServiceImpl" class="ysbk_web.service.impl.PassWordServiceImpl">
+		<property name="passWordDao" ref="passWordDaoImpl"></property>
+	</bean>
+	<bean id="passwordInitAction" class="ysbk_web.action.password.PasswordInitAction" scope="request">
+	</bean>
+	<bean id="passwordReferAction" class="ysbk_web.action.password.PasswordReferAction" scope="request">
+		<property name="passWordService" ref="passWordServiceImpl"></property>
+	</bean>
+
+	<!-- 在库情报 -->
+	<bean id="zaikoDaoImpl" class="ysbk_web.dao.impl.ZaikoDaoImpl"></bean>
+	<bean id="zaikoServiceImpl" class="ysbk_web.service.impl.ZaikoServiceImpl">
+		<property name="dao" ref="zaikoDaoImpl"></property>
+	</bean>
+	<bean id="zaikoInitAction" class="ysbk_web.action.zaiko.ZaikoInitAction" scope="request">
+	</bean>
+	<bean id="zaikoCSVDownloadAction" class="ysbk_web.action.zaiko.ZaikoCSVDownloadAction" scope="request">
+		<property name="zaikoService" ref="zaikoServiceImpl"></property>
+	</bean>
+
+	<!-- 出荷情报 -->
+	<bean id="syukkaDaoImpl" class="ysbk_web.dao.impl.SyukkaDaoImpl"></bean>
+	<bean id="syukkaServiceImpl" class="ysbk_web.service.impl.SyukkaServiceImpl">
+		<property name="dao" ref="syukkaDaoImpl"></property>
+	</bean>
+	<bean id="syukkaInitAction" class="ysbk_web.action.syukka.SyukkaInitAction" scope="request">
+	</bean>
+	<bean id="syukkaDataReferAction" class="ysbk_web.action.syukka.SyukkaDataReferAction" scope="request">
+		<property name="syukkaService" ref="syukkaServiceImpl"></property>
+	</bean>
+	<bean id="syukkaUpdateAction" class="ysbk_web.action.syukka.SyukkaUpdateAction" scope="request">
+		<property name="syukkaService" ref="syukkaServiceImpl"></property>
+	</bean>
+	<bean id="syukkaCSVDownloadAction" class="ysbk_web.action.syukka.SyukkaCSVDownloadAction" scope="request">
+		<property name="syukkaService" ref="syukkaServiceImpl"></property>
+	</bean>
+
+	<!-- 出荷照会 -->
+	<bean id="nonyuProgDaoImpl" class="ysbk_web.dao.impl.NonyuProgDaoImpl"></bean>
+	<bean id="nonyuProgServiceImpl" class="ysbk_web.service.impl.NonyuProgServiceImpl">
+		<property name="nonyuProgDao" ref="nonyuProgDaoImpl"></property>
+		<property name="dao" ref="hinbanZaikoDaoImpl"></property>
+	</bean>
+	<bean id="nonyuProgDataReferAction" class="ysbk_web.action.nonyuProg.NonyuProgDataReferAction" scope="request">
+		<property name="nonyuProgService" ref="nonyuProgServiceImpl"></property>
+	</bean>
+	<bean id="nonyuProgInitAction" class="ysbk_web.action.nonyuProg.NonyuProgInitAction" scope="request">
+		<property name="nonyuProgService" ref="nonyuProgServiceImpl"></property>
+	</bean>
+	<bean id="nonyuProgDetailReferAction" class="ysbk_web.action.nonyuProg.NonyuProgDetailReferAction" scope="request">
+		<property name="nonyuProgService" ref="nonyuProgServiceImpl"></property>
+	</bean>
+
+	<!-- 入荷照会 -->
+	<bean id="hannyuProgDaoImpl" class="ysbk_web.dao.impl.HannyuProgDaoImpl"></bean>
+	<bean id="hannyuProgServiceImpl" class="ysbk_web.service.impl.HannyuProgServiceImpl">
+		<property name="hannyuProgDao" ref="hannyuProgDaoImpl"></property>
+	</bean>
+	<bean id="hannyuProgInitAction" class="ysbk_web.action.hannyuProg.HannyuProgInitAction" scope="request">
+		<property name="hannyuProgService" ref="hannyuProgServiceImpl"></property>
+	</bean>
+	<bean id="hannyuProgDetailAction" class="ysbk_web.action.hannyuProg.HannyuProgDetailAction" scope="request">
+		<property name="hannyuProgService" ref="hannyuProgServiceImpl"></property>
+	</bean>
+
+	<!-- 入荷情報 -->
+	<bean id="nyukaDaoImpl" class="ysbk_web.dao.impl.NyukaDaoImpl"></bean>
+	<bean id="nyukaServiceImpl" class="ysbk_web.service.impl.NyukaServiceImpl">
+		<property name="dao" ref="nyukaDaoImpl"></property>
+	</bean>
+	<bean id="nyukaInitAction" class="ysbk_web.action.nyuka.NyukaInitAction" scope="request">
+	</bean>
+	<bean id="nyukaDataReferAction" class="ysbk_web.action.nyuka.NyukaDataReferAction" scope="request">
+		<property name="nyukaService" ref="nyukaServiceImpl"></property>
+	</bean>
+	<bean id="nyukaUpdateAction" class="ysbk_web.action.nyuka.NyukaUpdateAction" scope="request">
+		<property name="nyukaService" ref="nyukaServiceImpl"></property>
+	</bean>
+	<bean id="nyukaCSVDownloadAction" class="ysbk_web.action.nyuka.NyukaCSVDownloadAction" scope="request">
+		<property name="nyukaService" ref="nyukaServiceImpl"></property>
+	</bean>
+
+	<!-- 不足照会 -->
+	<bean id="fusokuDaoImpl" class="ysbk_web.dao.impl.FusokuDaoImpl"></bean>
+	<bean id="fusokuServiceImpl" class="ysbk_web.service.impl.FusokuServiceImpl">
+		<property name="fusokuDao" ref="fusokuDaoImpl"></property>
+	</bean>
+	<bean id="fusokuInitAction" class="ysbk_web.action.fusoku.FusokuInitAction" scope="request">
+		<property name="fusokuService" ref="fusokuServiceImpl"></property>
+	</bean>
+
+
+	<!-- ログインaction -->
+	<bean id="indexAction" class="ysbk_web.action.IndexAction" scope="request"></bean>
+	<bean id="loginAction" class="ysbk_web.action.LoginAction" scope="request">
+		<property name="userService" ref="userServiceImpl"></property>
+	</bean>
+
+	<!-- ログアウトaction -->
+	<bean id="logoutAction" class="ysbk_web.action.LogoutAction" scope="request">
+		<property name="userService" ref="userServiceImpl"></property>
+	</bean>
+
+	<!-- Aop 拦截器 -->
+	<bean id="loggerBean" class="ysbk_web.utility.LogTool"></bean>
+	<aop:config proxy-target-class="true">
+		<aop:pointcut id="ActionPointcut" expression="execution(* ysbk_web.action..*.*())" />
+		<aop:aspect id="loggerAspect" ref="loggerBean">
+			<aop:around method="doLogger" pointcut-ref="ActionPointcut" />
+		</aop:aspect>
+	</aop:config>
+</beans>

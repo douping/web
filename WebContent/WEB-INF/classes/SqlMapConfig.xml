@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+
+	<!-- テーブルのmapping -->
+	<sqlMap resource="ysbk_web/model/user.xml" />
+	<sqlMap resource="ysbk_web/model/hinbanZaiko/hinbanZaiko.xml" />
+	<sqlMap resource="ysbk_web/model/hinbanZaiko/hinbanZaikoDetail.xml" />
+	<sqlMap resource="ysbk_web/model/zaiko/zaiko.xml" />
+	<sqlMap resource="ysbk_web/model/syukka/syukka.xml" />
+
+	<sqlMap resource="ysbk_web/model/nonyuProg/nonyuProg.xml" />
+	<sqlMap resource="ysbk_web/model/nonyuProg/nonyuProgDetail.xml" />
+
+	<sqlMap resource="ysbk_web/model/syukka/syukkaCSV.xml" />
+	<sqlMap resource="ysbk_web/model/nyuka/nyuka.xml" />
+	<sqlMap resource="ysbk_web/model/fusoku/fusoku.xml" />
+
+	<sqlMap resource="ysbk_web/model/hannyuProg/hannyuProg.xml" />
+	<sqlMap resource="ysbk_web/model/hannyuProg/hannyuProgDetail.xml" />
+
+	<sqlMap resource="ysbk_web/model/nyuka/nyukaCSV.xml" />
+
+	<sqlMap resource="ysbk_web/utility/utility.xml" />
+</sqlMapConfig>

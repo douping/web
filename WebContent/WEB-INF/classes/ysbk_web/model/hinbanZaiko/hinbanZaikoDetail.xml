@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="Shift_JIS" ?>  
+  
+<!DOCTYPE sqlMap        
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"        
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="HinbanZaiko">
+	<typeAlias alias="HinbanZaikoDetailEntity"
+		type="ysbk_web.model.hinbanZaiko.HinbanZaikoDetailEntity" />
+	<resultMap id="HinbanZaikoDetailEntityResult" class="HinbanZaikoDetailEntity">
+		<!-- 予定日 -->
+		<result property="yotei_ymd" column="YOTEI_YMD" />
+		<!-- 予定時刻 -->
+		<result property="yotei_hms" column="YOTEI_HMS" />
+		<!-- 相手先 -->
+		<result property="a_jigyo_cd" column="A_JIGYO_CD" />
+		<!-- 受入 -->
+		<result property="tk_uke" column="TK_UKE" />
+		<!-- 便 -->
+		<result property="bin_no" column="BIN_NO" />
+		<!-- 納入番号 -->
+		<result property="tp_noban" column="TP_NOBAN" />
+		<!-- 入出庫 -->
+		<result property="nyusyu_kb" column="NYUSYU_KB" />
+		<!-- 搬入数 -->
+		<result property="han_su" column="HAN_SU" />
+		<!-- 納入数 -->
+		<result property="siji_su" column="SIJI_SU" />
+		<!-- 理論在庫 -->
+		<result property="w_riron_zaiko" column="W_RIRON_ZAIKO" />
+	</resultMap>
+
+	<!-- 品番別在庫管理詳細結果SQL文 -->
+	<select id="findHinbanZaikoDetail" parameterClass="ysbk_web.condition.HinbanZaikoCondition"
+		resultMap="HinbanZaikoDetailEntityResult">
+		SELECT * FROM (
+		SELECT ' ' AS YOTEI_YMD,' ' AS YOTEI_HMS,' '
+		AS A_JIGYO_CD, ' ' AS TK_UKE,'
+		' AS BIN_NO,' ' AS TP_NOBAN,' ' AS
+		NYUSYU_KB,
+		' ' AS HAN_SU,'現在在庫数' AS SIJI_SU, ZAIKO_SU AS W_RIRON_ZAIKO,
+		0 AS
+		ORDKEY
+		FROM TB_ZAIKO_JO
+		WHERE TK_HIN = #tk_hin# AND SYUYO_SU = #syuyo_su#
+		
+		UNION ALL
+		SELECT
+		YOTEI_YMD,YOTEI_HMS,A_JIGYO_CD,TK_UKE,BIN_NO,TP_NOBAN,
+		DECODE(NYUSYU_KB,'0','入庫予定',DECODE(NYUSYU_KB,'1','未出庫',DECODE(NYUSYU_KB,'2','出庫中','出庫完')))
+		AS NYUSYU_KB,
+		DECODE(NYUSYU_KB,'0',TO_CHAR(SIJI_SU),' ') AS HAN_SU,
+		DECODE(NYUSYU_KB,'0',' ',TO_CHAR(SIJI_SU)) AS SIJI_SU,
+		0 AS
+		W_RIRON_ZAIKO,1 AS ORDKEY
+		FROM TB_WEB_NSYUKO_WK
+		WHERE WKIBAN = #userView.wkiban#
+		ORDER BY YOTEI_YMD,YOTEI_HMS
+		) ORDER BY ORDKEY
+	</select>
+
+	<delete id="deleteItemBywkiban" parameterClass="java.lang.String">
+		delete from
+		tb_web_nsyuko_wk where wkiban = #wkiban#
+	</delete>
+
+	<update id="updateNumRet" parameterClass="ysbk_web.condition.HinbanZaikoCondition">
+		<isNull property="userView.rg">
+			DECLARE
+			numRet NUMBER;
+			BEGIN
+			numRet :=
+			YSBPZHKN_WEB_MAIN_02(#tk_hin#, #syuyo_su#, #userView.wkiban#,
+			#B_KYOTEN#, #userView.siire# );
+			END;
+		</isNull>
+
+		<isNotNull property="userView.rg">
+			DECLARE
+			numRet NUMBER;
+			BEGIN
+			numRet :=
+			YSBPZHKN_WEB_MAIN_01(#tk_hin#, #syuyo_su#, #userView.wkiban#,
+			#B_KYOTEN#, #userView.siire#, #rg#);
+			END;
+		</isNotNull>
+	</update>
+</sqlMap>

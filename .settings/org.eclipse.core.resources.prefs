@@ -1,0 +1,5 @@
+eclipse.preferences.version=1
+encoding//WebContent/WEB-INF/jsp/zaiko/zaiko.jsp=Shift_JIS
+encoding//src/ysbk_web/utility/Command.java=MS932
+encoding//src/ysbk_web/utility/CommandException.java=MS932
+encoding/<project>=UTF-8

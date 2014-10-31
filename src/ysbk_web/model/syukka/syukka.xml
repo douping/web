@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+  
+<!DOCTYPE sqlMap        
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"        
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Syukka">
+	<typeAlias alias="SyukkaEntity" type="ysbk_web.model.syukka.SyukkaEntity" />
+	<resultMap id="SyukkaEntityResult" class="SyukkaEntity">
+		<!-- 便No -->
+		<result property="bin_no" column="NOU_BIN" />
+		<!-- 得意先受入 -->
+		<result property="tk_uke" column="TK_UKE" />
+		<!-- 納入日 -->
+		<result property="nou_ymd" column="NOU_YMD" />
+		<!-- RG -->
+		<result property="rg" column="RG" />
+		<!-- CNT -->
+		<result property="cnt" column="CNT" />
+		<!-- SUMCNT -->
+		<result property="sumCnt" column="SUMCNT" />
+	</resultMap>
+	<!-- downloadType：0~5の明細取得 -->
+	<select id="findSyukkaResult" parameterClass="ysbk_web.condition.SyukkaCondition"
+		resultMap="SyukkaEntityResult" remapResults="true">
+		SELECT $sBinNm$ AS NOU_BIN, TK_UKE, RG, COUNT(*) AS CNT, SUM(SOSIN_FG)
+		AS SUMCNT,
+		$sNou_Ymd$ AS NOU_YMD
+		FROM $sTbl$
+		WHERE SIIRE =
+		#userView.siire#
+		<isNotNull property="userView.rg">
+			<iterate prepend="AND" property="userView.rg" open="(" close=")"
+				conjunction="OR">
+				RG = #userView.rg[]#
+			</iterate>
+		</isNotNull>
+		AND $sNou_Ymd$ <![CDATA[ >= ]]>
+		#nou_ymd#
+		<isEqual prepend="AND" property="downloadType" compareValue="3">
+			TRIM(BC_NO) IS NOT NULL
+		</isEqual>
+		GROUP BY $sBinNm$, TK_UKE, $sNou_Ymd$, RG
+		ORDER BY NOU_YMD, NOU_BIN,
+		TK_UKE, RG
+	</select>
+
+	<!-- downloadType：6の明細取得 -->
+	<select id="findSyukkaToppsTrasabiResult" parameterClass="ysbk_web.condition.SyukkaCondition"
+		resultMap="SyukkaEntityResult" remapResults="true">
+		SELECT R03.NOU_YMD, R03.BIN_NO AS NOU_BIN, R03.TK_UKE, R03.RG
+		,COUNT(*) AS CNT, SUM(SOSIN_FG) AS SUMCNT
+		FROM TB_NOUNYU_RI R03,
+		TB_NYUSYU_RI R05
+		WHERE R03.NOU_YMD <![CDATA[ >= ]]>
+		#nou_ymd#
+		AND R03.B_KYOTEN='7305'
+		AND R03.SIIRE = #userView.siire#
+		<isNotNull property="userView.rg">
+			<iterate prepend="AND" property="userView.rg" open="(" close=")"
+				conjunction="OR">
+				R03.RG = #userView.rg[]#
+			</iterate>
+		</isNotNull>
+		AND R03.NOU_YMD = R05.NOU_YMD
+		AND R03.BIN_NO = R05.BIN_ID
+		AND R03.RG =
+		R05.RG
+		GROUP BY R03.NOU_YMD, R03.BIN_NO, R03.TK_UKE, R03.RG
+		ORDER BY
+		R03.NOU_YMD, R03.BIN_NO, R03.TK_UKE ,R03.RG
+	</select>
+
+	<update id="updateSosinFlgBfDownload" parameterClass="ysbk_web.condition.SyukkaCondition">
+		UPDATE $sTbl$ SET
+		<isEqual property="downFlg" compareValue="1">
+			SOSIN_FG = '1'
+		</isEqual>
+		<isEqual property="downFlg" compareValue="2">
+			SOSIN_FG = '2'
+		</isEqual>
+		where SIIRE = #userView.siire#
+		AND $sNou_Ymd$ = #nou_ymd#
+		AND $sBinNm$ =
+		#bin_no#
+		AND TK_UKE = #tk_uke#
+		AND RG = #rg#
+		<isEqual property="downloadType" compareValue="2">
+			And SHORI_KB =
+			'0'
+		</isEqual>
+		<isEqual property="downloadType" compareValue="3">
+			And SHORI_KB =
+			'2'
+		</isEqual>
+		<isEqual property="downloadType" compareValue="4">
+			And SHORI_KB =
+			'1'
+		</isEqual>
+		<isEqual property="downloadType" compareValue="5">
+			And SHORI_KB =
+			'9'
+		</isEqual>
+		<isEqual property="downFlg" compareValue="2">
+			And SOSIN_FG = '0'
+		</isEqual>
+	</update>
+
+
+</sqlMap>

@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<!-- 多言語設定リソース -->
+	<constant name="struts.custom.i18n.resources" value="MessageResources" />
+	<!-- 多言語設定自動ロード するか-->
+	<constant name="struts.i18n.reload" value="false" />
+	<!-- コード戻モード設定-->
+	<constant name="struts.i18n.encoding" value="Shift_JIS" />
+
+	<!-- 配置変えても再起動は不要ですか -->
+	<constant name="struts.devMode" value="true" />
+	<!-- Strutsのインスタンスはspringから取得 -->
+	<constant name="struts.objectFactory" value="spring" />
+
+	<!--ログインinterceptor-->
+	<package name="loginCheck" extends="json-default">
+		<interceptors>
+			<interceptor name="checkLogin"
+				class="ysbk_web.utility.interceptor.LoginInterceptor"></interceptor>
+			<interceptor-stack name="checkLoginStack">
+				<interceptor-ref name="checkLogin" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+
+		</interceptors>
+		<default-interceptor-ref name="checkLoginStack" />
+		<!-- redirect先設定 -->
+		<global-results>
+			<result name="login" type="redirectAction">
+				<param name="actionName">index.action</param>
+				<param name="namespace">/</param>
+			</result>
+			<result name="dbErr">/WEB-INF/jsp/error/DBErr.jsp</result>
+			<result name="err">/WEB-INF/jsp/error/commonErr.jsp</result>
+			<result name="failure">/WEB-INF/jsp/error/commonErr.jsp</result>
+			<result name="sessionerr">/WEB-INF/jsp/error/sessionErr.jsp</result>
+			<result name="passwordSuccess">/WEB-INF/jsp/error/passwordSuccess.jsp</result>
+			<result name="passwordFailure">/WEB-INF/jsp/error/passwordFailure.jsp</result>
+		</global-results>
+	</package>
+
+	<!-- ログインAction -->
+	<package name="default" extends="struts-default">
+		<action name="index" class="indexAction">
+			<result name="input">/WEB-INF/jsp/login.jsp</result>
+		</action>
+		<action name="login" class="loginAction">
+			<result name="success" type="redirectAction">zaiko/zaikoInit.action</result>
+			<result name="input">/WEB-INF/jsp/login.jsp</result>
+			<result name="error">/WEB-INF/jsp/error/loginErr.jsp</result>
+			<result name="dbErr">/WEB-INF/jsp/error/DBErr.jsp</result>
+		</action>
+
+	</package>
+
+	<!-- パスワード変更Action -->
+	<package name="password" namespace="/password" extends="loginCheck">
+		<action name="passwordInit" class="passwordInitAction">
+			<result name="input">/WEB-INF/jsp/password/passwordList.jsp</result>
+		</action>
+		<action name="passwordRefer" class="passwordReferAction">
+			<result name="failure">/WEB-INF/jsp/password/passwordList.jsp</result>
+			<result name="success">/WEB-INF/jsp/password/passwordList.jsp</result>
+			<result name="input">/WEB-INF/jsp/password/passwordList.jsp</result>
+		</action>
+	</package>
+
+	<!-- 在庫照会Action -->
+	<package name="hinbanZaiko" namespace="/hinbanZaiko" extends="loginCheck">
+		<action name="hinbanZaikoInit" class="hinbanZaikoInitAction">
+			<result name="success">/WEB-INF/jsp/hinbanZaiko/hinbanZaikoData.jsp
+			</result>
+		</action>
+		<action name="hinbanZaikoSearch" class="hinbanZaikoSearchAction">
+			<result name="success">/WEB-INF/jsp/hinbanZaiko/hinbanZaikoData.jsp
+			</result>
+		</action>
+		<action name="hinbanZaikoDetailRefer" class="hinbanZaikoDetailAction">
+			<result name="success">/WEB-INF/jsp/hinbanZaiko/hinbanZaikoDetail.jsp
+			</result>
+		</action>
+	</package>
+
+	<!-- 在库情报Action -->
+	<package name="zaiko" namespace="/zaiko" extends="loginCheck">
+		<action name="zaikoInit" class="zaikoInitAction">
+			<result name="success">/WEB-INF/jsp/zaiko/zaiko.jsp</result>
+		</action>
+		<action name="zaikoCSVDownload" class="zaikoCSVDownloadAction">
+			<result name="success">/WEB-INF/jsp/zaiko/zaiko.jsp</result>
+		</action>
+	</package>
+
+	<!-- 出荷情报Action -->
+	<package name="syukka" namespace="/syukka" extends="loginCheck">
+		<action name="syukkaInit" class="syukkaInitAction">
+			<result name="success">/WEB-INF/jsp/syukka/syukkaSearchList.jsp</result>
+		</action>
+		<action name="syukkaDataRefer" class="syukkaDataReferAction">
+			<result name="success">/WEB-INF/jsp/syukka/syukkaData.jsp</result>
+		</action>
+		<action name="syukkaUpdate" class="syukkaUpdateAction">
+			<result name="success">/WEB-INF/jsp/syukka/syukkaData.jsp</result>
+		</action>
+		<action name="syukkaCSVDownload" class="syukkaCSVDownloadAction">
+			<result name="success">/WEB-INF/jsp/syukka/syukkaData.jsp</result>
+		</action>
+
+	</package>
+
+
+	<!-- 出荷照会Action -->
+	<package name="nonyuProg" namespace="/nonyuProg" extends="loginCheck">
+		<action name="nonyuProgInit" class="nonyuProgInitAction">
+			<result name="success">/WEB-INF/jsp/nonyuProg/nonyuProgData.jsp</result>
+		</action>
+		<action name="nonyuProgSearch" class="nonyuProgDataReferAction">
+			<result name="success">/WEB-INF/jsp/nonyuProg/nonyuProgData.jsp</result>
+		</action>
+		<action name="nonyuProgDetailRefer" class="nonyuProgDetailReferAction">
+			<result name="success">/WEB-INF/jsp/nonyuProg/nonyuProgDetailData.jsp
+			</result>
+		</action>
+		<action name="checkHasDetail" class="nonyuProgDetailReferAction">
+			<result type="json">
+				<param name="root">
+					hasDetail
+				</param>
+			</result>
+		</action>
+	</package>
+
+
+	<!-- 入荷情報Action -->
+	<package name="nyuka" namespace="/nyuka" extends="loginCheck">
+		<action name="nyukaInit" class="nyukaInitAction">
+			<result name="success">/WEB-INF/jsp/nyuka/nyukaSearchList.jsp</result>
+		</action>
+		<action name="nyukaDataRefer" class="nyukaDataReferAction">
+			<result name="success">/WEB-INF/jsp/nyuka/nyukaData.jsp</result>
+		</action>
+		<action name="nyukaUpdate" class="nyukaUpdateAction">
+			<result name="success">/WEB-INF/jsp/nyuka/nyukaData.jsp</result>
+		</action>
+		<action name="nyukaCSVDownload" class="nyukaCSVDownloadAction">
+			<result name="success">/WEB-INF/jsp/nyuka/nyukaData.jsp</result>
+		</action>
+	</package>
+
+	<!-- 入荷照会Action -->
+	<package name="hannyuProg" namespace="/hannyuProg" extends="loginCheck">
+		<action name="hannyuProgInit" class="hannyuProgInitAction">
+			<result name="success">/WEB-INF/jsp/hannyuProg/hannyuProgData.jsp
+			</result>
+		</action>
+		<action name="hannyuProgDetailRefer" class="hannyuProgDetailAction">
+			<result name="success">/WEB-INF/jsp/hannyuProg/hannyuProgDetail.jsp
+			</result>
+		</action>
+	</package>
+
+	<!-- 不足照会Action -->
+	<package name="fusoku" namespace="/fusoku" extends="loginCheck">
+		<action name="fusokuInit" class="fusokuInitAction">
+			<result name="success">/WEB-INF/jsp/fusoku/fusokuData.jsp</result>
+		</action>
+	</package>
+
+	<!-- ログアウトAction -->
+	<package name="logout" extends="struts-default">
+		<action name="logout" class="logoutAction">
+			<result name="success">/WEB-INF/jsp/login.jsp</result>
+		</action>
+	</package>
+
+</struts>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+  
+<!DOCTYPE sqlMap        
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"        
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="nyuka">
+	<typeAlias alias="NyukaEntity" type="ysbk_web.model.nyuka.NyukaEntity" />
+	<resultMap id="NyukaEntityResult" class="NyukaEntity">
+		<!-- 便No -->
+		<result property="bin_no" column="NOU_BIN" />
+		<!-- CNT -->
+		<result property="cnt" column="CNT" />
+		<!-- SUMCNT -->
+		<result property="sumCnt" column="SUMCNT" />
+	</resultMap>
+
+	<!-- 入荷情報明細取得 -->
+	<select id="findNyukaResult" parameterClass="ysbk_web.condition.NyukaCondition"
+		resultMap="NyukaEntityResult" remapResults="true">
+		SELECT R04.BIN_NO AS NOU_BIN, COUNT(*) AS CNT, SUM(R04.SOSIN_FG) AS
+		SUMCNT
+		FROM TB_HANNYU_RI R04, TB_HINBAN_MA M01
+
+		WHERE R04.KANRI_KOJO =
+		#userView.siire#
+		<isNotEmpty property="han_ymd" prepend="AND">
+			R04.HAN_YMD =
+			#han_ymd#
+		</isNotEmpty>
+
+		<isNotNull property="userView.rg">
+			AND R04.TK_HIN = M01.TK_HIN
+			AND R04.SYUYO_SU = M01.SYUYO_SU
+			<iterate prepend="AND" property="userView.rg" open="(" close=")"
+				conjunction="OR">
+				((M01.RG = #userView.rg[]# AND (M01.RG2 =
+				#userView.rg[]# OR M01.RG2 = ' ')) OR M01.RG2 = #userView.rg[]#)
+			</iterate>
+		</isNotNull>
+		GROUP BY R04.BIN_NO
+		ORDER BY BIN_NO
+	</select>
+
+</sqlMap>

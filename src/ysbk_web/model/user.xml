@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"  
+   "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap>
+	<!-- typeAlias通じて、以下はパッケージ名を書かないこととする -->
+	<typeAlias alias="User" type="ysbk_web.model.UserEntity" />
+
+	<!-- DBユーザエンティティ取得 -->
+	<select id="findUserByCd" parameterClass="String" resultClass="User">
+		SELECT * FROM TB_WEBLOGIN_MA WHERE RTRIM(OPCODE) = #opcode#
+	</select>
+	<!--W08Web入出庫ワークを削除 -->
+	<delete id="deleteNsyuko01" parameterClass="String">
+		DELETE FROM
+		TB_WEB_NSYUKO_WK WHERE WKIBAN = #wkiban#
+	</delete>
+	<!--W08Web入出庫ワークを削除 -->
+	<delete id="deleteNsyuko02" parameterClass="String">
+		DELETE FROM TB_WEB_NSYUKO_WK WHERE SUBSTR(WKIBAN ,1,8) <![CDATA[ <= ]]>
+		#time#
+	</delete>
+	<!-- WEBログインRGマスタより取得 -->
+	<select id="findRg" parameterClass="String" resultClass="java.lang.String">
+		SELECT RG FROM TB_WEB_RG_MA WHERE OPCODE = #opcode#
+		AND RG_KB = '1'
+		AND
+		RG <![CDATA[ <> ]]>
+		' '
+	</select>
+	<!-- パスワードのUPDATEを行う -->
+	<update id="updatePswd" parameterClass="java.util.HashMap">
+		<!-- UPDATE TB_WEBLOGIN_MA SET OPPSWD = #chgoppswd# WHERE RTRIM(OPCODE) 
+			= #opcode# AND RTRIM(OPPSWD) = #oppswd# -->
+		UPDATE TB_WEBLOGIN_MA SET OPPSWD = #chgoppswd# WHERE RTRIM(OPCODE) = #opcode#
+		AND RTRIM(OPPSWD) = #oppswd#
+	</update>
+</sqlMap>  

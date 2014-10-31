@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+  
+<!DOCTYPE sqlMap        
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"        
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="nyuka">
+	<typeAlias alias="NyukaCSVEntity" type="ysbk_web.model.nyuka.NyukaCSVEntity" />
+	<resultMap id="NyukaCSVEntityResult" class="NyukaCSVEntity">
+		<!-- 便ID -->
+		<result property="bin_id" column="BIN_ID" />
+		<!-- 管理工場 -->
+		<result property="kanri_kojo" column="KANRI_KOJO" />
+		<!-- 搬入日 -->
+		<result property="han_ymd" column="HAN_YMD" />
+		<!-- 特車区分 -->
+		<result property="tokusya_kb" column="TOKUSYA_KB" />
+		<!-- 特車回数 -->
+		<result property="tokusya_kai" column="TOKUSYA_KAI" />
+		<!-- 得意先品番 -->
+		<result property="tk_hin" column="TK_HIN" />
+		<!-- 収容数 -->
+		<result property="syuyo_su" column="SYUYO_SU" />
+		<!-- 矢崎背番 -->
+		<result property="seban" column="SEBAN" />
+		<!-- 指示箱数 -->
+		<result property="siji_hako" column="SIJI_HAKO" />
+		<!-- 指示数 -->
+		<result property="siji_su" column="SIJI_SU" />
+		<!-- 搬入箱数 -->
+		<result property="han_hako" column="HAN_HAKO" />
+		<!-- 搬入数 -->
+		<result property="han_su" column="HAN_SU" />
+		<!-- 出荷拠点 -->
+		<result property="s_kyoten" column="S_KYOTEN" />
+		<!-- 製造場所 -->
+		<result property="seizo_ba" column="SEIZO_BA" />
+		<!-- 処理日 -->
+		<result property="syori_ymd" column="SYORI_YMD" />
+		<!-- 処理時間 -->
+		<result property="syori_hms" column="SYORI_HMS" />
+		<!-- 確定フラグ -->
+		<result property="kakutei_fg" column="KAKUTEI_FG" />
+		<!-- OPコード -->
+		<result property="opcode" column="OPCODE" />
+		<!-- 便No -->
+		<result property="bin_no" column="BIN_NO" />
+	</resultMap>
+
+	<update id="setKousinUpdate" parameterClass="ysbk_web.condition.NyukaCondition">
+		UPDATE TB_HANNYU_RI SET
+		SOSIN_FG = '1'
+		where KANRI_KOJO =
+		#userView.siire#
+		<isNotEmpty property="han_ymd">
+			and HAN_YMD = #han_ymd#
+		</isNotEmpty>
+		AND BIN_NO = #bin_no#
+		<isNotNull property="userView.rg">
+			AND TK_HIN <![CDATA[ || ]]>
+			SYUYO_SU IN
+			(SELECT R04.TK_HIN <![CDATA[ || ]]>
+			R04.SYUYO_SU FROM TB_HANNYU_RI R04 ,TB_HINBAN_MA M01
+			WHERE
+			R04.KANRI_KOJO = #userView.siire#
+			<isNotEmpty property="han_ymd">
+				AND R04.HAN_YMD = #han_ymd#
+			</isNotEmpty>
+			AND R04.TK_HIN = M01.TK_HIN
+			AND R04.SYUYO_SU = M01.SYUYO_SU
+			<iterate prepend="AND" property="userView.rg" open="(" close=")"
+				conjunction="OR">
+				((M01.RG = #userView.rg[]# AND (M01.RG2 =
+				#userView.rg[]# OR M01.RG2 = ' ')) OR M01.RG2 = #userView.rg[]#)
+			</iterate>
+			)
+		</isNotNull>
+	</update>
+
+	<select id="findNyukaCSVResult" parameterClass="ysbk_web.condition.NyukaCondition"
+		resultMap="NyukaCSVEntityResult" remapResults="true">
+		SELECT R04.*
+		<isNotNull property="userView.rg">
+			FROM TB_HANNYU_RI R04 ,TB_HINBAN_MA M01
+		</isNotNull>
+		<isNull property="userView.rg">
+			FROM TB_HANNYU_RI R04
+		</isNull>
+		where R04.KANRI_KOJO = #userView.siire#
+		<isNotEmpty property="han_ymd">
+			and R04.HAN_YMD = #han_ymd#
+		</isNotEmpty>
+		<isNotNull property="userView.rg">
+			AND R04.TK_HIN = M01.TK_HIN
+			AND R04.SYUYO_SU = M01.SYUYO_SU
+			<iterate prepend="AND" property="userView.rg" open="(" close=")"
+				conjunction="OR">
+				((M01.RG = #userView.rg[]# AND (M01.RG2 =
+				#userView.rg[]# OR M01.RG2 = ' ')) OR M01.RG2 = #userView.rg[]#)
+			</iterate>
+		</isNotNull>
+		AND R04.BIN_NO = #bin_no#
+		ORDER BY R04.BIN_NO, R04.TK_HIN
+	</select>
+
+</sqlMap>	

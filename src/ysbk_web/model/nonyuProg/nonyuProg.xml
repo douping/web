@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="Shift_JIS" ?>  
+  
+<!DOCTYPE sqlMap        
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"        
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="NonyuProgEntity" type="ysbk_web.model.nonyuProg.NonyuProgEntity" />
+	<!-- 納入進捗一覧取得 -->
+	<select id="findNonyuProgByCondtion" parameterClass="ysbk_web.condition.NonyuProgCondition"
+		resultClass="NonyuProgEntity">
+		SELECT NOU_YMD, RG, BIN_NO, NOU_TIM, JUCHU_KB, TUIKA_FG, NOUJOU_FG,
+		HAKO_YMD,HIKI_FG, HIKIYOKUSI_FG, SIJI_HAKO, (SIJI_HAKO - HIKI_HAKO)
+		FUSOKU_HAKO, JUNBI_HAKO, SEKI_VOL ,IJOU_KB
+		FROM TB_NOUBIN_JO
+		<isEqual property="cond_fg" compareValue="true">
+			WHERE 0=0
+			<isNotNull property="rg">
+				AND RG LIKE '$rg$%'
+			</isNotNull>
+		</isEqual>
+		<isEqual property="sort_fg" compareValue="0">
+			ORDER BY NOU_YMD ,RG
+			,BIN_NO ,NOU_TIM
+		</isEqual>
+		<isNotEqual property="sort_fg" compareValue="0">
+			ORDER BY
+			NOU_YMD ,NOU_TIM ,RG ,BIN_NO
+		</isNotEqual>
+	</select>
+</sqlMap>

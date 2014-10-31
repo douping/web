@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+  
+<!DOCTYPE sqlMap        
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"        
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="Syukka">
+	<typeAlias alias="SyukkaCSV" type="ysbk_web.model.syukka.SyukkaCSVEntity" />
+
+	<!--downloadType：0,1のCSV取得-->
+	<resultMap id="SyukkaCSVResult" class="SyukkaCSV">
+		<!-- T得意先コード -->
+		<result property="ttk_cd" column="TTK_CD" />
+		<!-- 得意先受入 -->
+		<result property="tk_uke" column="TK_UKE" />
+		<!-- 支給先 -->
+		<result property="sikyu_saki" column="SIKYU_SAKI" />
+		<!-- 直送区分 -->
+		<result property="choku_kb" column="CHOKU_KB" />
+		<!-- 仕入先 -->
+		<result property="siire" column="SIIRE" />
+		<!-- 工区 -->
+		<result property="koku" column="KOKU" />
+		<!-- TP機番 -->
+		<result property="tp_kiban" column="TP_KIBAN" />
+		<!-- TP納番 -->
+		<result property="tp_noban" column="TP_NOBAN" />
+		<!-- 得意先背番 -->
+		<result property="tk_seban" column="TK_SEBAN" />
+		<!-- 得意先品番 -->
+		<result property="tk_hin" column="TK_HIN" />
+		<!-- 収容数 -->
+		<result property="syuyo_su" column="SYUYO_SU" />
+		<!-- 指示箱数 -->
+		<result property="siji_hako" column="SIJI_HAKO" />
+		<!-- 指示数 -->
+		<result property="siji_su" column="SIJI_SU" />
+		<!-- 納入日 -->
+		<result property="nou_ymd" column="NOU_YMD" />
+		<!-- 納入便 -->
+		<result property="nou_bin" column="NOU_BIN" />
+		<!-- 打切フラグ -->
+		<result property="uchi_fg" column="UCHI_FG" />
+		<!-- 打切残数 -->
+		<result property="uchi_zan_su" column="UCHI_ZAN_SU" />
+		<!-- TP発注区分 -->
+		<result property="tp_hachu_kb" column="TP_HACHU_KB" />
+		<!-- かんばん区分 -->
+		<result property="kanban_kb" column="KANBAN_KB" />
+		<!-- 出荷場 -->
+		<result property="syukaba" column="SYUKABA" />
+		<!-- 実納入日 -->
+		<result property="j_nou_ymd" column="J_NOU_YMD" />
+		<!-- 実納入便 -->
+		<result property="j_nou_bin" column="J_NOU_BIN" />
+	</resultMap>
+	
+	<!--downloadType：6のCSV取得-->
+	<resultMap id="SyukkaCSVTypeSixResult" class="SyukkaCSV">
+		<!-- T得意先コード -->
+		<result property="ttk_cd" column="TTK_CD" />
+		<!-- 得意先受入 -->
+		<result property="tk_uke" column="TK_UKE" />
+		<!-- 支給先 -->
+		<result property="sikyu_saki" column="SIKYU_SAKI" />
+		<!-- 直送区分 -->
+		<result property="choku_kb" column="CHOKU_KB" />
+		<!-- 仕入先 -->
+		<result property="siire" column="SIIRE" />
+		<!-- 工区 -->
+		<result property="koku" column="KOKU" />
+		<!-- TP機番 -->
+		<result property="tp_kiban" column="TP_KIBAN" />
+		<!-- TP納番 -->
+		<result property="tp_noban" column="TP_NOBAN" />
+		<!-- 得意先背番 -->
+		<result property="tk_seban" column="TK_SEBAN" />
+		<!-- 得意先品番 -->
+		<result property="tk_hin" column="TK_HIN" />
+		<!-- 収容数 -->
+		<result property="syuyo_su" column="SYUYO_SU" />
+		<!-- 指示箱数 -->
+		<result property="siji_hako" column="SIJI_HAKO" />
+		<!-- 指示数 -->
+		<result property="siji_su" column="SIJI_SU" />
+		<!-- 納入日 -->
+		<result property="nou_ymd" column="NOU_YMD" />
+		<!-- 納入便 -->
+		<result property="nou_bin" column="NOU_BIN" />
+		<!-- 打切フラグ -->
+		<result property="uchi_fg" column="UCHI_FG" />
+		<!-- 打切残数 -->
+		<result property="uchi_zan_su" column="UCHI_ZAN_SU" />
+		<!-- TP発注区分 -->
+		<result property="tp_hachu_kb" column="TP_HACHU_KB" />
+		<!-- かんばん区分 -->
+		<result property="kanban_kb" column="KANBAN_KB" />
+		<!-- 出荷場 -->
+		<result property="syukaba" column="SYUKABA" />
+		<!-- 実納入日 -->
+		<result property="j_nou_ymd" column="J_NOU_YMD" />
+		<!-- 実納入便 -->
+		<result property="j_nou_bin" column="J_NOU_BIN" />
+		
+		<result property="qr_naiyo" column="QR_NAIYO" />
+	</resultMap>
+	
+	<!-- downloadType：2,3,5のCSV取得 -->
+	<resultMap id="SyukkaCSVMoreResult" class="SyukkaCSV">
+		<!-- T得意先コード -->
+		<result property="ttk_cd" column="TTK_CD" />
+		<!-- 得意先受入 -->
+		<result property="tk_uke" column="TK_UKE" />
+		<!-- 支給先 -->
+		<result property="sikyu_saki" column="SIKYU_SAKI" />
+		<!-- 直送区分 -->
+		<result property="choku_kb" column="CHOKU_KB" />
+		<!-- 仕入先 -->
+		<result property="siire" column="SIIRE" />
+		<!-- 工区 -->
+		<result property="koku" column="KOKU" />
+		<!-- TP機番 -->
+		<result property="tp_kiban" column="TP_KIBAN" />
+		<!-- TP納番 -->
+		<result property="tp_noban" column="TP_NOBAN" />
+		<!-- 得意先背番 -->
+		<result property="tk_seban" column="TK_SEBAN" />
+		<!-- 得意先品番 -->
+		<result property="tk_hin" column="TK_HIN" />
+		<!-- 収容数 -->
+		<result property="syuyo_su" column="SYUYO_SU" />
+		<!-- 指示箱数 -->
+		<result property="siji_hako" column="SIJI_HAKO" />
+		<!-- 指示数 -->
+		<result property="siji_su" column="SIJI_SU" />
+		<!-- 納入日 -->
+		<result property="nou_ymd" column="NOU_YMD" />
+		<!-- 納入便 -->
+		<result property="nou_bin" column="NOU_BIN" />
+
+		<result property="uchi_fg" column="UCHI_FG" />
+
+		<result property="uchi_zan_su" column="UCHI_ZAN_SU" />
+
+		<result property="tp_hachu_kb" column="TP_HACHU_KB" />
+
+		<result property="kanban_kb" column="KANBAN_KB" />
+
+		<result property="syukaba" column="SYUKABA" />
+
+		<result property="j_nou_ymd" column="J_NOU_YMD" />
+
+		<result property="j_nou_bin" column="J_NOU_BIN" />
+
+		<result property="ident_no" column="IDENT_NO" />
+		<!-- 吊上げ時間 -->
+		<result property="tsuri_hm" column="TSURI_HM" />
+		<!-- BC連番 -->
+		<result property="bc_no" column="BC_NO" />
+
+	</resultMap>
+
+	<!-- downloadType：4のCSV取得 -->
+	<resultMap id="SyukkaCSVAllResult" class="SyukkaCSV">
+
+		<result property="ttk_cd" column="TTK_CD" />
+
+		<result property="tk_uke" column="TK_UKE" />
+
+		<result property="sikyu_saki" column="SIKYU_SAKI" />
+
+		<result property="choku_kb" column="CHOKU_KB" />
+
+		<result property="siire" column="SIIRE" />
+
+		<result property="koku" column="KOKU" />
+
+		<result property="tp_kiban" column="TP_KIBAN" />
+
+		<result property="tp_noban" column="TP_NOBAN" />
+
+		<result property="tk_seban" column="TK_SEBAN" />
+
+		<result property="tk_hin" column="TK_HIN" />
+
+		<result property="syuyo_su" column="SYUYO_SU" />
+
+		<result property="siji_hako" column="SIJI_HAKO" />
+
+		<result property="siji_su" column="SIJI_SU" />
+
+		<result property="nou_ymd" column="NOU_YMD" />
+
+		<result property="nou_bin" column="NOU_BIN" />
+
+		<result property="uchi_fg" column="UCHI_FG" />
+
+		<result property="uchi_zan_su" column="UCHI_ZAN_SU" />
+
+		<result property="tp_hachu_kb" column="TP_HACHU_KB" />
+
+		<result property="kanban_kb" column="KANBAN_KB" />
+
+		<result property="syukaba" column="SYUKABA" />
+
+		<result property="j_nou_ymd" column="J_NOU_YMD" />
+
+		<result property="j_nou_bin" column="J_NOU_BIN" />
+
+
+		<result property="ident_no" column="IDENT_NO" />
+
+		<result property="tsuri_hm" column="TSURI_HM" />
+
+		<result property="qr_naiyo" column="QR_NAIYO" />
+
+		<result property="bc_no" column="BC_NO" />
+
+	</resultMap>
+
+	<!-- downloadType：0,1のCSV取得 -->
+	<select id="findSyukkaCSVResult" parameterClass="ysbk_web.condition.SyukkaCondition"
+		resultMap="SyukkaCSVResult" remapResults="true">
+		SELECT TTK_CD, TK_UKE, $sSikyuSakiNm$ AS SIKYU_SAKI, CHOKU_KB, SIIRE,
+		KOKU, TP_KIBAN,
+		TP_NOBAN, TK_SEBAN, TK_HIN, SYUYO_SU, $sSijiHakoNm$ AS
+		SIJI_HAKO,
+		$sSijiSuNm$ AS SIJI_SU, $sCSVNouYmd$ AS NOU_YMD,
+		$sCSVBinNm$
+		AS NOU_BIN, UCHI_FG, UCHI_ZAN_SU, TP_HACHU_KB, KANBAN_KB, SYUKABA,
+		J_NOU_YMD, J_NOU_BIN
+		<isEqual property="downloadType" compareValue="2">
+			, IDENT_NO,
+			TSURI_HM, BC_NO
+		</isEqual>
+		<isEqual property="downloadType" compareValue="3">
+			, IDENT_NO,
+			TSURI_HM, BC_NO
+		</isEqual>
+		<isEqual property="downloadType" compareValue="4">
+			, IDENT_NO,
+			TSURI_HM, BC_NO
+		</isEqual>
+		<isEqual property="downloadType" compareValue="5">
+			, IDENT_NO,
+			TSURI_HM, BC_NO
+		</isEqual>
+		<isEqual property="downloadType" compareValue="4">
+			, QR_NAIYO
+		</isEqual>
+		FROM $sTbl$
+		WHERE SIIRE = #userView.siire#
+		AND $sNou_Ymd$ = #nou_ymd#
+		AND $sBinNm$ = #bin_no#
+		AND TK_UKE = #tk_uke#
+		AND RG = #rg#
+		<isEqual property="downloadType" compareValue="2">
+			AND SHORI_KB =
+			'0'
+		</isEqual>
+		<isEqual property="downloadType" compareValue="3">
+			AND SHORI_KB =
+			'2'
+		</isEqual>
+		<isEqual property="downloadType" compareValue="4">
+			AND SHORI_KB =
+			'1'
+		</isEqual>
+		<isEqual property="downloadType" compareValue="5">
+			AND SHORI_KB =
+			'9'
+		</isEqual>
+		<isEqual property="downloadType" compareValue="3">
+			AND TRIM(BC_NO)
+			IS NOT NULL
+		</isEqual>
+		<isEqual property="downFlg" compareValue="2">
+			AND SOSIN_FG = '2'
+		</isEqual>
+		ORDER BY $sNou_Ymd$, $sBinNm$, TK_UKE, RG, SYORI_YMD, SYORI_HMS,
+		S_RENBAN
+	</select>
+	<!-- downloadType：2,3,5 のCSV取得 -->
+	<select id="findSyukkaCSVMoreResult" parameterClass="ysbk_web.condition.SyukkaCondition"
+		resultMap="SyukkaCSVMoreResult" remapResults="true">
+		SELECT TTK_CD, TK_UKE, $sSikyuSakiNm$ AS SIKYU_SAKI, CHOKU_KB, SIIRE,
+		KOKU, TP_KIBAN,
+		TP_NOBAN, TK_SEBAN, TK_HIN, SYUYO_SU, $sSijiHakoNm$ AS
+		SIJI_HAKO,
+		$sSijiSuNm$ AS SIJI_SU, $sCSVNouYmd$ AS NOU_YMD,
+		$sCSVBinNm$
+		AS NOU_BIN, UCHI_FG, UCHI_ZAN_SU, TP_HACHU_KB, KANBAN_KB, SYUKABA,
+		J_NOU_YMD, J_NOU_BIN
+		<isEqual property="downloadType" compareValue="2">
+			, IDENT_NO,
+			TSURI_HM, BC_NO
+		</isEqual>
+		<isEqual property="downloadType" compareValue="3">
+			, IDENT_NO,
+			TSURI_HM, BC_NO
+		</isEqual>
+		<isEqual property="downloadType" compareValue="4">
+			, IDENT_NO,
+			TSURI_HM, BC_NO
+		</isEqual>
+		<isEqual property="downloadType" compareValue="5">
+			, IDENT_NO,
+			TSURI_HM, BC_NO
+		</isEqual>
+		<isEqual property="downloadType" compareValue="4">
+			, QR_NAIYO
+		</isEqual>
+		FROM $sTbl$
+		WHERE SIIRE = #userView.siire#
+		AND $sNou_Ymd$ = #nou_ymd#
+		AND $sBinNm$ = #bin_no#
+		AND TK_UKE = #tk_uke#
+		AND RG = #rg#
+		<isEqual property="downloadType" compareValue="2">
+			AND SHORI_KB =
+			'0'
+		</isEqual>
+		<isEqual property="downloadType" compareValue="3">
+			AND SHORI_KB =
+			'2'
+		</isEqual>
+		<isEqual property="downloadType" compareValue="4">
+			AND SHORI_KB =
+			'1'
+		</isEqual>
+		<isEqual property="downloadType" compareValue="5">
+			AND SHORI_KB =
+			'9'
+		</isEqual>
+		<isEqual property="downloadType" compareValue="3">
+			AND TRIM(BC_NO)
+			IS NOT NULL
+		</isEqual>
+		<isEqual property="downFlg" compareValue="2">
+			AND SOSIN_FG = '2'
+		</isEqual>
+		ORDER BY $sNou_Ymd$, $sBinNm$, TK_UKE, RG, SYORI_YMD, SYORI_HMS,
+		S_RENBAN
+	</select>
+
+	<!-- downloadType：4 のCSV取得-->
+	<select id="findSyukkaCSVAllResult" parameterClass="ysbk_web.condition.SyukkaCondition"
+		resultMap="SyukkaCSVAllResult" remapResults="true">
+		SELECT TTK_CD, TK_UKE, $sSikyuSakiNm$ AS SIKYU_SAKI, CHOKU_KB, SIIRE,
+		KOKU, TP_KIBAN,
+		TP_NOBAN, TK_SEBAN, TK_HIN, SYUYO_SU, $sSijiHakoNm$ AS
+		SIJI_HAKO,
+		$sSijiSuNm$ AS SIJI_SU, $sCSVNouYmd$ AS NOU_YMD,
+		$sCSVBinNm$
+		AS NOU_BIN, UCHI_FG, UCHI_ZAN_SU, TP_HACHU_KB, KANBAN_KB, SYUKABA,
+		J_NOU_YMD, J_NOU_BIN
+		<isEqual property="downloadType" compareValue="2">
+			, IDENT_NO,
+			TSURI_HM, BC_NO
+		</isEqual>
+		<isEqual property="downloadType" compareValue="3">
+			, IDENT_NO,
+			TSURI_HM, BC_NO
+		</isEqual>
+		<isEqual property="downloadType" compareValue="4">
+			, IDENT_NO,
+			TSURI_HM, BC_NO
+		</isEqual>
+		<isEqual property="downloadType" compareValue="5">
+			, IDENT_NO,
+			TSURI_HM, BC_NO
+		</isEqual>
+		<isEqual property="downloadType" compareValue="4">
+			, QR_NAIYO
+		</isEqual>
+		FROM $sTbl$
+		WHERE SIIRE = #userView.siire#
+		AND $sNou_Ymd$ = #nou_ymd#
+		AND $sBinNm$ = #bin_no#
+		AND TK_UKE = #tk_uke#
+		AND RG = #rg#
+		<isEqual property="downloadType" compareValue="2">
+			AND SHORI_KB =
+			'0'
+		</isEqual>
+		<isEqual property="downloadType" compareValue="3">
+			AND SHORI_KB =
+			'2'
+		</isEqual>
+		<isEqual property="downloadType" compareValue="4">
+			AND SHORI_KB =
+			'1'
+		</isEqual>
+		<isEqual property="downloadType" compareValue="5">
+			AND SHORI_KB =
+			'9'
+		</isEqual>
+		<isEqual property="downloadType" compareValue="3">
+			AND TRIM(BC_NO)
+			IS NOT NULL
+		</isEqual>
+		<isEqual property="downFlg" compareValue="2">
+			AND SOSIN_FG = '2'
+		</isEqual>
+		ORDER BY $sNou_Ymd$, $sBinNm$, TK_UKE, RG, SYORI_YMD, SYORI_HMS,
+		S_RENBAN
+	</select>
+
+	<!-- downloadType：6のCSV取得 -->
+	<select id="findSyukkaCSVToppsTrasabiResult" parameterClass="ysbk_web.condition.SyukkaCondition"
+		resultMap="SyukkaCSVTypeSixResult" remapResults="true">
+		SELECT ' ' AS TTK_CD, R03.TK_UKE, R03.TSIKYU_SAKI AS SIKYU_SAKI,
+		R03.CHOKU_KB, R03.SIIRE, R03.KOKU, R03.TP_KIBAN,
+		R03.TP_NOBAN,
+		R03.TK_SEBAN, R03.TK_HIN, R03.SYUYO_SU, 1 AS SIJI_HAKO,
+		R05.SURYO AS
+		SIJI_SU,
+		<isEqual property="userView.siire" compareValue="2306">
+			R03.NOU_YMD AS
+			NOU_YMD, R03.BIN_NO AS NOU_BIN,
+		</isEqual>
+		<isNotEqual property="userView.siire" compareValue="2306">
+			R03.ORG_NOU_YMD AS NOU_YMD, R03.ORG_BIN_NO AS NOU_BIN,
+		</isNotEqual>
+		R03.UCHI_FG, R03.UCHI_ZAN_SU, R03.TP_HACHU_KB, R03.KANBAN_KB,
+		R03.SYUKABA,
+		R03.NOU_YMD AS J_NOU_YMD, R03.BIN_NO AS J_NOU_BIN,
+		R05.QR_NAIYO
+		FROM TB_NOUNYU_RI R03, TB_NYUSYU_RI R05
+		WHERE R03.SIIRE =
+		#userView.siire#
+		<isNotEmpty property="nou_ymd">
+			AND R03.NOU_YMD <![CDATA[ >= ]]>
+			#nou_ymd#
+		</isNotEmpty>
+		AND R03.TK_UKE = #tk_uke#
+		AND R03.B_KYOTEN='7305'
+		AND R03.NOU_YMD = R05.NOU_YMD
+		AND R03.RG = R05.RG
+		AND R03.BIN_NO = R05.BIN_ID
+		AND R03.TK_HIN = R05.TK_HIN
+		AND R03.SYUYO_SU = R05.SYUYO_SU
+		<isEqual property="downFlg" compareValue="2">
+			AND SOSIN_FG = '2'
+		</isEqual>
+		ORDER BY R03.NOU_YMD, R03.BIN_NO, R03.TK_UKE,
+		R03.RG, R03.TK_HIN,
+		R03.SYORI_YMD, R03.SYORI_HMS, R03.EDABAN, R05.RENBAN,
+		R05.TK_RENBAN
+	</select>
+
+
+	<update id="setSabunKousinUpdate" parameterClass="ysbk_web.condition.SyukkaCondition">
+		UPDATE $sTbl$ SET
+		SOSIN_FG = '1'
+		where SIIRE = #userView.siire#
+		AND
+		$sNou_Ymd$ = #nou_ymd#
+		AND $sBinNm$ = #bin_no#
+		AND TK_UKE = #tk_uke#
+		AND
+		RG = #rg#
+		<isEqual property="downloadType" compareValue="2">
+			AND SHORI_KB =
+			'0'
+		</isEqual>
+		<isEqual property="downloadType" compareValue="3">
+			AND SHORI_KB =
+			'2'
+		</isEqual>
+		<isEqual property="downloadType" compareValue="4">
+			AND SHORI_KB =
+			'1'
+		</isEqual>
+		<isEqual property="downloadType" compareValue="5">
+			AND SHORI_KB =
+			'9'
+		</isEqual>
+		<isEqual property="downloadType" compareValue="3">
+			AND TRIM(BC_NO)
+			IS NOT NULL
+		</isEqual>
+		and SOSIN_FG = '2'
+	</update>
+</sqlMap>

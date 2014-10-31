@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+  
+<!DOCTYPE sqlMap        
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"        
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="HinbanZaiko">
+	<typeAlias alias="HinbanZaikoEntity"
+		type="ysbk_web.model.hinbanZaiko.HinbanZaikoEntity" />
+	<resultMap id="HinbanZaikoEntityResult" class="HinbanZaikoEntity">
+		<!-- 受入 -->
+		<result property="tk_uke" column="TK_UKE" />
+		<!-- メーカー背番 -->
+		<result property="tk_seban" column="TK_SEBAN" />
+		<!-- メーカー品番 -->
+		<result property="tk_hin" column="TK_HIN" />
+		<!-- 収容数 -->
+		<result property="syuyo_su" column="SYUYO_SU" />
+		<!-- 在庫数 -->
+		<result property="zaiko_su" column="ZAIKO_SU" />
+		<!-- ロケ在庫数 -->
+		<result property="loc_zaiko_su" column="LOC_ZAIKO_SU" />
+		<!-- 引当可能在庫数 -->
+		<result property="hiki_zaiko_su" column="HIKI_ZAIKO_SU" />
+		<!-- 不足総数 -->
+		<result property="fusoku_su" column="FUSOKU_SU" />
+		<!-- 管理工場 -->
+		<result property="kanri_kojo" column="KANRI_KOJO" />
+		<!-- 出荷拠点 -->
+		<result property="s_kyoten" column="S_KYOTEN" />
+		<!-- 製造場所 -->
+		<result property="seizo_ba" column="SEIZO_BA" />
+		<!-- 仕入背番 -->
+		<result property="seban" column="SEBAN" />
+		<!-- 当日搬入数 -->
+		<result property="han_su" column="HAN_SU" />
+		<!-- ロケ -->
+		<result property="location" column="LOCATION" />
+		<!-- 最終納入日 -->
+		<result property="lst_nou_ymd" column="LST_NOU_YMD" />
+		<!-- 最終搬入日 -->
+		<result property="lst_han_ymd" column="LST_HAN_YMD" />
+	</resultMap>
+
+
+	<!-- 品番別在庫情報照会結果SQL文 -->
+	<select id="findHinbanZaikoByCondtion" parameterClass="ysbk_web.condition.HinbanZaikoCondition"
+		resultMap="HinbanZaikoEntityResult">
+		SELECT JO.TK_HIN ,JO.SYUYO_SU ,JO.ZAIKO_SU ,JO.LOC_ZAIKO_SU
+		,JO.HIKI_ZAIKO_SU
+		,JO.SEBAN ,JO.LST_NOU_YMD,JO.LST_HAN_YMD
+		,(NVL(NOU.SUM_SIJI_SU,0) - NVL(NOU.SUM_HIKI_SU,0)) AS FUSOKU_SU
+		,M01.KANRI_KOJO ,M01.S_KYOTEN ,M01.SEIZO_BA ,M01.LOCATION
+		,M01.HAKO_SYU ,M01.TK_UKE ,M01.TK_SEBAN
+		,NVL(RI.SIJI_SU,0) AS HAN_SU
+		FROM TB_ZAIKO_JO JO
+		,TB_HINBAN_MA M01
+		,(SELECT
+		TK_HIN,SYUYO_SU,SUM(SIJI_SU) AS SUM_SIJI_SU ,SUM(HIKI_SU) AS
+		SUM_HIKI_SU
+		FROM TB_NOUHIN_JO GROUP BY TK_HIN ,SYUYO_SU
+		) NOU ,(SELECT
+		TK_HIN ,SYUYO_SU ,SUM(SIJI_SU) AS SIJI_SU
+		FROM TB_HANNYU_RI WHERE
+		HAN_YMD = #sKadoDate#
+		GROUP BY TK_HIN ,SYUYO_SU
+		) RI
+		WHERE M01.KANRI_KOJO
+		= #userView.siire#
+
+		<isNotNull property="userView.rg">
+			<iterate prepend="AND" property="userView.rg" open="(" close=")"
+				conjunction="OR">
+				((M01.RG = #userView.rg[]# AND (M01.RG2 =
+				#userView.rg[]# OR M01.RG2 = ' '))
+				OR M01.RG2 = #userView.rg[]#)
+			</iterate>
+		</isNotNull>
+
+		<isNotEmpty prepend="AND" property="tk_hin">
+			JO.TK_HIN LIKE
+			'$tk_hin$%'
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="seban">
+			JO.SEBAN LIKE '$seban$%'
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="tk_uke">
+			M01.TK_UKE LIKE
+			'$tk_uke$%'
+		</isNotEmpty>
+		AND JO.TK_HIN = M01.TK_HIN
+		AND JO.SYUYO_SU = M01.SYUYO_SU
+		AND JO.TK_HIN
+		= NOU.TK_HIN(+)
+		AND JO.SYUYO_SU = NOU.SYUYO_SU(+)
+		AND JO.TK_HIN =
+		RI.TK_HIN(+)
+		AND JO.SYUYO_SU = RI.SYUYO_SU(+)
+		ORDER BY JO.TK_HIN
+		,JO.SYUYO_SU
+	</select>
+</sqlMap>

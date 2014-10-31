@@ -1,0 +1,159 @@
+.menutext {
+	font-size: 10pt;
+	line-height: 10pt;
+	color: #143364;
+	text-decoration: none;
+}
+
+.menutext00 {
+	font-size: 8.5pt;
+	line-height: 10pt;
+	color: #0D46A5;
+}
+
+.ContentsTitle {
+	font-size: 12pt;
+	line-height: 16pt;
+	color: #008B8B;
+	letter-spacing: 0.1em;
+	font-family: "Arial", "MS PÉSÉVÉbÉN";
+	font-weight: 600;
+}
+
+.ListTitle {
+	font-size: 8.5pt;
+	line-height: 10pt;
+	color: #FFFFFF;
+}
+
+.ListTitle2 {
+	font-size: 9pt;
+	line-height: normal;
+	color: #FFFFFF;
+	font-weight: bold;
+}
+
+.textS1 {
+	font-size: 8.5pt;
+	line-height: normal;
+	color: #495973;
+}
+
+.textS2 {
+	font-size: 9pt;
+	line-height: normal;
+	color: #00008B;
+}
+
+.textS3 {
+	font-size: 9pt;
+	line-height: normal;
+	color: #00FF33;
+}
+
+.textM1 {
+	font-size: 8.5pt;
+	line-height: 16px;
+	color: #495973;
+}
+
+a {
+	color: #0000EE;
+	text-decoration: underline;
+}
+
+a:hover {
+	color: 357BEB;
+	text-decoration: underline;
+}
+
+.LowerNavi {
+	font-size: 8.5pt;
+	line-height: 12pt;
+	color: #778299;
+	text-decoration: underline;
+}
+
+.LowerNavi2 {
+	font-size: 8.5pt;
+	line-height: 12pt;
+	color: #999999;
+}
+
+.SearchText {
+	font-size: 12px;
+	line-height: 14px;
+	color: 1C5A6A;
+}
+
+.textbox {
+	font-size: 9pt;;
+	clear: none;
+	float: none;
+	height: 1.4em;
+	width: 10em
+}
+
+.closeBTN {
+	font-size: 9pt;
+	line-height: normal;
+	color: #FFFFFF;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+.TopicsContents {
+	font-size: 8.5pt;
+	line-height: 180%;
+	color: #666666;
+}
+
+.tableNumber {
+	font-size: 8.5pt;
+	line-height: normal;
+	color: #FF6600;
+	font-weight: bold;
+}
+
+.Cont02textS1 {
+	font-size: 8.5pt;
+	line-height: normal;
+	color: #0d46a5;
+}
+
+.Cont03textS1 {
+	font-size: 9pt;
+	line-height: normal;
+	color: #0d46a5;
+}
+
+.tableCont1 {
+	font-size: 8.5pt;
+	line-height: normal;
+	color: #666666;
+}
+
+.tableCont2 {
+	font-size: 10pt;
+	line-height: normal;
+	color: #000066;
+}
+
+.loginText {
+	font-size: 12px;
+	line-height: 20px;
+	color: #1C5A6A;
+}
+
+.Copyright {
+	font-size: 10px;
+	line-height: 14px;
+	color: #999999;
+	letter-spacing: 0.1em;
+}
+body{
+	overflow-y: hidden;
+}
+.table_gray td{
+	border:1px solid gray;
+}

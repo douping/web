@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-modules id="moduleCoreId" project-version="1.5.0">
+	<wb-module deploy-name="ysbk_web">
+		<wb-resource deploy-path="/" source-path="/WebContent"
+			tag="defaultRootSource" />
+		<wb-resource deploy-path="/WEB-INF/classes" source-path="/src" />
+		<wb-resource deploy-path="/WEB-INF/classes/" source-path="/ImportedClasses" />
+		<dependent-module archiveName="xwork-core-2.3.16.3.jar"
+			deploy-path="/WEB-INF/lib/"
+			handle="module:/resource/xwork-core-2.3.16.3/xwork-core-2.3.16.3">
+			<dependency-type>uses</dependency-type>
+		</dependent-module>
+		<dependent-module archiveName="spring.jar"
+			deploy-path="/WEB-INF/lib/" handle="module:/resource/spring/spring">
+			<dependency-type>uses</dependency-type>
+		</dependent-module>
+		<dependent-module archiveName="struts2-core-2.3.16.3.jar"
+			deploy-path="/WEB-INF/lib/"
+			handle="module:/resource/struts2-core-2.3.16.3/struts2-core-2.3.16.3">
+			<dependency-type>uses</dependency-type>
+		</dependent-module>
+		<property name="context-root" value="ysbk_web" />
+		<property name="java-output-path" value="/ysbk_web/build/classes" />
+	</wb-module>
+</project-modules>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+  
+<!DOCTYPE sqlMap        
+    PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"        
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="HinbanZaiko">
+	<typeAlias alias="ZaikoEntity" type="ysbk_web.model.zaiko.ZaikoEntity" />
+	<resultMap id="ZaikoResult" class="ZaikoEntity">
+		<!-- 物流拠点 -->
+		<result property="b_kyoten" column="B_KYOTEN" />
+		<!-- 得意先品番 -->
+		<result property="tk_hin" column="TK_HIN" />
+		<!-- 収容数 -->
+		<result property="syuyo_su" column="SYUYO_SU" />
+		<!-- 背番 -->
+		<result property="seban" column="SEBAN" />
+		<!-- 引当可能在庫数 -->
+		<result property="hiki_zaiko_su" column="HIKI_ZAIKO_SU" />
+		<!-- ロケ在庫数 -->
+		<result property="loc_zaiko_su" column="LOC_ZAIKO_SU" />
+		<!-- 在庫数 -->
+		<result property="zaiko_su" column="ZAIKO_SU" />
+		<!-- 最終納入日 -->
+		<result property="lst_nou_ymd" column="LST_NOU_YMD" />
+		<!-- 最終搬入日 -->
+		<result property="lst_han_ymd" column="LST_HAN_YMD" />
+		<!-- アイデントNo -->
+		<result property="ident_no" column="IDENT_NO" />
+		<!-- BC連番 -->
+		<result property="bc_no" column="BC_NO" />
+	</resultMap>
+	<resultMap id="ZaikoHistoryResult" class="ZaikoEntity">
+		<!-- 物流拠点 -->
+		<result property="b_kyoten" column="B_KYOTEN" />
+		<!-- 得意先品番 -->
+		<result property="tk_hin" column="TK_HIN" />
+		<!-- 収容数 -->
+		<result property="syuyo_su" column="SYUYO_SU" />
+		<!-- 背番 -->
+		<result property="seban" column="SEBAN" />
+		<!-- 引当可能在庫数 -->
+		<result property="hiki_zaiko_su" column="HIKI_ZAIKO_SU" />
+		<!-- ロケ在庫数 -->
+		<result property="loc_zaiko_su" column="LOC_ZAIKO_SU" />
+		<!-- 在庫数 -->
+		<result property="zaiko_su" column="ZAIKO_SU" />
+		<!-- アイデントNo -->
+		<result property="ident_no" column="IDENT_NO" />
+		<!-- BC連番 -->
+		<result property="bc_no" column="BC_NO" />
+		<!-- 処理日 -->
+		<result property="syori_ymd" column="SYORI_YMD" />
+		<!-- 処理時間 -->
+		<result property="syori_hms" column="SYORI_HMS" />
+	</resultMap>
+
+	<select id="findZaikodata" parameterClass="ysbk_web.condition.ZaikoCondition"
+		resultMap="ZaikoResult">
+		SELECT A.B_KYOTEN, A.TK_HIN, A.SYUYO_SU, A.SEBAN,
+		A.HIKI_ZAIKO_SU,
+		A.LOC_ZAIKO_SU, A.ZAIKO_SU, A.LST_NOU_YMD, A.LST_HAN_YMD,J19.IDENT_NO
+		,J19.BC_NO
+		FROM TB_ZAIKO_JO A, TB_HINBAN_MA M01 ,TB_JUNLAST_JO J19
+		WHERE M01.KANRI_KOJO = #userView.siire#
+		<isNotNull property="userView.rg">
+			<iterate prepend="AND" property="userView.rg" open="(" close=")"
+				conjunction="OR">
+				((M01.RG = #userView.rg[]# AND (M01.RG2 =
+				#userView.rg[]# OR M01.RG2 = ' '))
+				OR M01.RG2 = #userView.rg[]#)
+			</iterate>
+		</isNotNull>
+		AND M01.B_KYOTEN = '7305'
+		AND M01.B_KYOTEN = A.B_KYOTEN
+		AND M01.TK_HIN =
+		A.TK_HIN
+		AND M01.SYUYO_SU = A.SYUYO_SU
+
+		AND M01.B_KYOTEN =
+		J19.B_KYOTEN(+)
+		AND M01.TK_HIN = J19.TK_HIN(+)
+		AND M01.SYUYO_SU =
+		J19.SYUYO_SU(+)
+		ORDER BY A.B_KYOTEN, A.TK_HIN, A.SYUYO_SU
+	</select>
+
+	<select id="findZaikoHistoryData" parameterClass="ysbk_web.condition.ZaikoCondition"
+		resultMap="ZaikoHistoryResult">
+		SELECT A.B_KYOTEN, A.TK_HIN, A.SYUYO_SU, A.SEBAN,
+		A.SYORI_YMD,
+		A.SYORI_HMS,
+		A.HIKI_ZAIKO_SU, A.LOC_ZAIKO_SU, A.ZAIKO_SU
+		,J19.IDENT_NO
+		,J19.BC_NO
+		FROM TB_ZAIKO_RI A, TB_HINBAN_MA M01 ,TB_JUNLAST_JO J19
+		WHERE M01.KANRI_KOJO = #userView.siire#
+		<isNotNull property="userView.rg">
+			<iterate prepend="AND" property="userView.rg" open="(" close=")"
+				conjunction="OR">
+				((M01.RG = #userView.rg[]# AND (M01.RG2 =
+				#userView.rg[]# OR M01.RG2 = ' '))
+				OR M01.RG2 = #userView.rg[]#)
+			</iterate>
+		</isNotNull>
+		AND M01.B_KYOTEN = '7305'
+		AND M01.B_KYOTEN = A.B_KYOTEN
+		AND M01.TK_HIN = A.TK_HIN
+		AND M01.SYUYO_SU = A.SYUYO_SU
+		AND M01.B_KYOTEN = J19.B_KYOTEN(+)
+		AND M01.TK_HIN = J19.TK_HIN(+)
+		AND M01.SYUYO_SU = J19.SYUYO_SU(+)
+		AND A.SYORI_YMD = #syori_ymd#
+		ORDER BY A.SYORI_YMD,
+		A.SYORI_HMS, A.B_KYOTEN, A.TK_HIN, A.SYUYO_SU
+	</select>
+
+</sqlMap>
